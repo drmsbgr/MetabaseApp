@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Metabase";
+}
+@model MetabaseViewModel
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<div class="">
+    <h1 class="display-4">Gömülü Grafikler</h1>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <form asp-action="Index" method="post">
+            <div class="form-check">
+                <input asp-for="IHaveToken" class="form-check-input" onchange="this.form.submit()" />
+                <label asp-for="IHaveToken" class="form-check-label">Tokenim Var</label>
+            </div>
+        </form>
+
+        if (Model.IHaveToken)
+        {
+            <form asp-action="Authorize" method="post">
+                <div class="form-group my-3">
+                    <label asp-for="CreatedToken">Token</label>
+                    <input asp-for="CreatedToken" required class="form-control">
+                </div>
+                <div class="form-group my-3">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Tokeni Kullan</button>
+                    </div>
+                </div>
+            </form>
+        }
+        else
+        {
+            <form asp-action="Authorize" method="post">
+                <div class="form-group my-3">
+                    <label asp-for="UserName">Kullanıcı Adı</label>
+                    <input asp-for="UserName" required class="form-control">
+                </div>
+                <div class="form-group my-3">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Token Oluştur</button>
+                    </div>
+                </div>
+            </form>
+        }
+
+        if (!string.IsNullOrEmpty(Model.CreatedToken))
+        {
+            <h4>Oluşturulan token</h4>
+            <p style="overflow-wrap: break-word;">@Model.CreatedToken</p>
+            <iframe src="@Configuration["METABASE_SITE_URL"]/embed/dashboard/@Model.CreatedToken#bordered=true&titled=true"
+                frameborder="1" width="1200" height="600"></iframe>
+        }
+        else
+        {
+            <p>Grafikleri görebilmek için yetkilendirilmiş olmanız gerekmektedir.</p>
+
+        }
+    }
+</div>
