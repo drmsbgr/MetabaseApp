@@ -5,9 +5,29 @@
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
+<script>
+    function copyText() {
+        var copyText = document.getElementById("tokenInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+    }
+</script>
+
 <div class="text-center">
     <h1 class="display-4">Dashboard</h1>
 
+    <p style="">Hoşgeldiniz! <strong>@Model.UserName</strong></p>
+    <div class="form-group my-3">
+        <input type="text" value="@Model.Token" id="tokenInput" class="form-control" readonly>
+    </div>
+    <div class="form-group my-3">
+        <button class="btn btn-primary" onclick="copyText()">Kopyala</button>
+    </div>
+    <p><a asp-action="ClearSession" class="link-danger">Oturumu temizle</a></p>
+
     <iframe src="@Configuration["METABASE_SITE_URL"]/embed/dashboard/@Model.Token#bordered=true&titled=true"
         frameborder="1" width="1200" height="600"></iframe>
+
+
 </div>

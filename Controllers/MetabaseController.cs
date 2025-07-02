@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using MetabaseApp.Infrastructure;
 using MetabaseApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class MetabaseController : Controller
         {
             if (tokenProvider.ValidateJwtToken(loadedToken!, out _))
             {
-                return RedirectToActionPermanent("Dashboard", new DashboardViewModel { Token = loadedToken });
+                return RedirectToAction("Dashboard");
             }
             else
             {
@@ -31,17 +32,22 @@ public class MetabaseController : Controller
         return View(model);
     }
 
-    public IActionResult Dashboard(DashboardViewModel model)
+    public IActionResult Dashboard()
     {
+        var model = new DashboardViewModel { Token = HttpContext.Session.GetString("token") };
+
         if (string.IsNullOrEmpty(model.Token))
             return RedirectToActionPermanent("Index");
 
-        if (!tokenProvider.ValidateJwtToken(model.Token, out _))
+        if (!tokenProvider.ValidateJwtToken(model.Token, out var securityToken))
         {
             ModelState.AddModelError("", "Oturumunuzdaki JWT geçersiz veya süresi dolmuş.");
             HttpContext.Session.SetString("token", "");
             return RedirectToActionPermanent("Index");
         }
+
+        var jwtSec = tokenProvider.ReadToken(model.Token);
+        model.UserName = jwtSec.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Name)?.Value;
 
         return View(model);
     }
@@ -55,8 +61,9 @@ public class MetabaseController : Controller
             var token = tokenProvider.Create(model.UserName!);
             model.Token = token;
             HttpContext.Session.SetString("token", token);
+            return RedirectToAction("Dashboard");
         }
-        return RedirectToActionPermanent("Index", model);
+        return View("Index");
     }
 
     [HttpPost]
@@ -73,12 +80,13 @@ public class MetabaseController : Controller
             return View("Index", model);
         }
 
-        if (ModelState.IsValid)
-        {
-            HttpContext.Session.SetString("token", model.Token!);
-            return RedirectToActionPermanent("Dashboard", new DashboardViewModel { Token = model.Token });
-        }
+        HttpContext.Session.SetString("token", model.Token!);
+        return RedirectToAction("Dashboard");
+    }
 
-        return View("Index", model);
+    public IActionResult ClearSession()
+    {
+        HttpContext.Session.SetString("token", string.Empty);
+        return RedirectToAction("Index");
     }
 }

@@ -8,55 +8,39 @@
 <div>
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <h1 class="display-4">Yetkilendirme</h1>
-    @if (!User.Identity.IsAuthenticated)
+
+    <p>Grafikleri görebilmek için yetkilendirilmiş olmanız gerekmektedir.</p>
+
+    <form asp-action="Index" method="post">
+        <div class="form-check">
+            <input asp-for="IHaveToken" class="form-check-input" onchange="this.form.submit()" />
+            <label asp-for="IHaveToken" class="form-check-label">Tokenim Var</label>
+        </div>
+    </form>
+
+    @if (Model.IHaveToken)
     {
-        if (!string.IsNullOrEmpty(Model.Token))
-        {
-            @* <h4>Token</h4>
-            <p style="overflow-wrap: break-word;">@Model.Token</p> 
-            <iframe src="@Configuration["METABASE_SITE_URL"]/embed/dashboard/@Model.Token#bordered=true&titled=true"
-                frameborder="1" width="1200" height="600"></iframe>*@
-        }
-        else
-        {
-            <p>Grafikleri görebilmek için yetkilendirilmiş olmanız gerekmektedir.</p>
-
-            <form asp-action="Index" method="post">
-                <div class="form-check">
-                    <input asp-for="IHaveToken" class="form-check-input" onchange="this.form.submit()" />
-                    <label asp-for="IHaveToken" class="form-check-label">Tokenim Var</label>
-                </div>
-            </form>
-
-            if (Model.IHaveToken)
-            {
-                <form asp-action="UseToken" method="post">
-                    <div class="form-group my-3">
-                        <label asp-for="Token">Token</label>
-                        <input asp-for="Token" required class="form-control">
-                    </div>
-                    <div class="form-group my-3">
-                        <div class="btn-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Tokeni Kullan</button>
-                        </div>
-                    </div>
-                </form>
-            }
-            else
-            {
-                <form asp-action="Authorize" method="post">
-                    <div class="form-group my-3">
-                        <label asp-for="UserName">Kullanıcı Adı</label>
-                        <input asp-for="UserName" required class="form-control">
-                    </div>
-                    <div class="form-group my-3">
-                        <div class="btn-group">
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Token Oluştur</button>
-                        </div>
-                    </div>
-                </form>
-            }
-        }
+        <form asp-action="UseToken" method="post">
+            <div class="form-group my-3">
+                <label asp-for="Token">Token</label>
+                <input asp-for="Token" required class="form-control">
+            </div>
+            <div class="form-group my-3">
+                <button class="btn btn-primary" type="submit">Tokeni Kullan</button>
+            </div>
+        </form>
+    }
+    else
+    {
+        <form asp-action="Authorize" method="post">
+            <div class="form-group my-3">
+                <label asp-for="UserName">Kullanıcı Adı</label>
+                <input asp-for="UserName" required class="form-control">
+            </div>
+            <div class="form-group my-3">
+                <button class="btn btn-primary" type="submit">Token Oluştur</button>
+            </div>
+        </form>
     }
 </div>
 

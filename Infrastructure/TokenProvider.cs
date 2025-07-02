@@ -15,15 +15,10 @@ public class TokenProvider(IConfiguration configuration)
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        var payload = new Dictionary<string, object>
-        {
-            { "resource", new { dashboard = 2 } },
-            { "params", new { } },
-        };
-
         var tokenDescriptor = new SecurityTokenDescriptor()
         {
             Subject = new ClaimsIdentity([
+                new Claim(JwtRegisteredClaimNames.Name, username),
             ]),
             Claims = new Dictionary<string, object>
             {
@@ -68,5 +63,12 @@ public class TokenProvider(IConfiguration configuration)
             validatedToken = null!;
             return false;
         }
+    }
+
+    public JwtSecurityToken ReadToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        return jwtToken;
     }
 }
