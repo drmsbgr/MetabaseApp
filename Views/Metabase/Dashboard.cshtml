@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Metabase";
+}
+@model DashboardViewModel
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<div class="text-center">
+    <h1 class="display-4">Dashboard</h1>
+
+    <iframe src="@Configuration["METABASE_SITE_URL"]/embed/dashboard/@Model.Token#bordered=true&titled=true"
+        frameborder="1" width="1200" height="600"></iframe>
+</div>

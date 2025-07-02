@@ -42,4 +42,31 @@ public class TokenProvider(IConfiguration configuration)
 
         return handler.WriteToken(securityToken);
     }
+
+    public bool ValidateJwtToken(string token, out SecurityToken validatedToken)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!));
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        try
+        {
+            tokenHandler.ValidateToken(token, validationParameters, out validatedToken);
+            return true;
+        }
+        catch (Exception)
+        {
+            validatedToken = null!;
+            return false;
+        }
+    }
 }
