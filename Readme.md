@@ -31,11 +31,3 @@
 # Gömme (Embedding) işleminin tamamlanması
 
 - Dashboard, `<iframe>`kullanılarak sayfaya gömülmüştür.
-
-```
-
-```
-
-```
-
-```
