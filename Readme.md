@@ -15,6 +15,7 @@
 - Metabase kurulum işlemi gerçekleştirildi.
 - Metabase localhost:3000 üzerinde çalıştırıldı.
 - Metabase'in örnek veritabanı kullanılarak bir dashboard oluşturuldu.
+- Oluşturulan dashboard'a sorular(questions) eklendi.
 - Dashboard paylaşım yerinden static embedding seçildi ve dashboard publish edildi.
 
 # Web Uygulamasının oluşturulması
