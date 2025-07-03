@@ -5,10 +5,17 @@
 # Metabase platformunun kurulması
 
 - Docker kullanılarak metabase imajı yüklendi.
+- ```console
+    docker pull metabase/metabase:latest
+  ```
 - Ardından bu imajdan bir container oluşturuldu.
+- ```console
+  docker run -d -p 3000:3000 --name metabase metabase/metabase
+  ```
 - Metabase kurulum işlemi gerçekleştirildi.
 - Metabase localhost:3000 üzerinde çalıştırıldı.
 - Metabase'in örnek veritabanı kullanılarak bir dashboard oluşturuldu.
+- Dashboard paylaşım yerinden static embedding seçildi ve dashboard publish edildi.
 
 # Web Uygulamasının oluşturulması
 
@@ -17,11 +24,18 @@
 
 # JsonWebToken oluşturulması
 
-1. Dashboard paylaşım yerinden static embedding seçildi ve dashboard publish edildi.
-2. JWT için secret key aynı ekrandan alındı.
-3. Gerekli paketler kurularak JWT oluşturan bir servis tasarlandı.
-4. Kullanıcıyı yetkilendiren bir arayüz oluşturuldu.
+1. JWT için secret key aynı ekrandan alındı.
+2. Gerekli paketler kurularak JWT oluşturan bir servis tasarlandı.
+3. Kullanıcıyı yetkilendiren bir arayüz oluşturuldu.
 
 # Gömme (Embedding) işleminin tamamlanması
 
 - Dashboard, `<iframe>`kullanılarak sayfaya gömülmüştür.
+
+```
+
+```
+
+```
+
+```
